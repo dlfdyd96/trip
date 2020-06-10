@@ -3,12 +3,13 @@ import Itinerary from '../models/Itinerary.js'
 // C
 export const postRegisterItinerary = async (req, res, next) => {
     const { 
-        body: { title, description, routes }
+        body: { title, description, routes, date }
     } = req;
     try {
         const newItin = await Itinerary.create({
             creator: req.user._id,
             title,
+            date,
             description,
             routes,
         });
@@ -51,12 +52,12 @@ export const getDetailItinerary = async (req, res, next) => {
 // U
 export const postEditItinerary = async (req, res, next) => {
     const {
-        body : {title, description, routes},
+        body : {title, description, routes, date},
         params : {id},
     } = req;
     try {
         console.log({title, description, routes, id});
-        await Itinerary.findOneAndUpdate({_id : id}, {title, description, routes});
+        await Itinerary.findOneAndUpdate({_id : id}, {title, description, routes, date});
         res.status(200).json({
             message : "Success Update Itinerary",
         })
