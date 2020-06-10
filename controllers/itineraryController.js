@@ -1,4 +1,7 @@
 import Itinerary from '../models/Itinerary.js'
+import axios from 'axios'
+import dotenv from 'dotenv'
+dotenv.config();
 
 // C
 export const postRegisterItinerary = async (req, res, next) => {
@@ -36,10 +39,27 @@ export const getDetailItinerary = async (req, res, next) => {
     try {
         const itinerary = await Itinerary.findById(id)
             .populate("creator") // 사용자 정보 얻어오기
+
+        // itinerary 값들을 비동기처리로 받아온다.
+        
+        let allWorks = []
+        itinerary.routes.forEach(element => {
+            allWorks.push(new Promise((resolve, reject) => {
+                axios.get(`${process.env.HOPE_URL}/api/search/area/${element}`)
+                .then(res => resolve(res.data))
+                .catch(error => reject(error))
+            }))
+        })
+
+        let routes = await Promise.all(allWorks);
+
         res.status(200).json({
             message : "Success Get Itinerary",
-            itinerary
+            itinerary,
+            routes
         })
+        
+        next();
     } catch(err) {
         console.log(`Get Detail itinerary Error : ${err}`);
         res.status(400).json({
@@ -48,6 +68,7 @@ export const getDetailItinerary = async (req, res, next) => {
         });
     }
 }
+
 
 // U
 export const postEditItinerary = async (req, res, next) => {
@@ -94,9 +115,18 @@ export const getDeleteItinerary = async (req, res, next) => {
     }
 }
 
+
+
 export const getItineraries = async (req, res) => {
     try {
         const items = await Itinerary.find({publish:true}).populate("creator").sort({createdAt: -1});
+
+
+
+
+
+
+
         res.status(200).json({
             message : "Success to get Itineraries",
             items
