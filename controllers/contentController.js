@@ -31,7 +31,8 @@ export const getContentDetail = async (req, res) => {
             })
             res.status(200).json({
                 message: 'Success Create Content Detail',
-                content,
+                content : newContent,
+                comments : [],
             })
             res.end();
         }

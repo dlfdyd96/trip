@@ -95,7 +95,7 @@ export const getDeleteItinerary = async (req, res, next) => {
 
 export const getItineraries = async (req, res) => {
     try {
-        const items = await Itinerary.find({publish:true}).sort({createdAt: -1});
+        const items = await Itinerary.find({publish:true}).populate("creator").sort({createdAt: -1});
         res.status(200).json({
             message : "Success to get Itineraries",
             items
