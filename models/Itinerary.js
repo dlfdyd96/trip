@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const itinerarySchema = new mongoose.Schema({
     creator : {
@@ -8,7 +10,7 @@ const itinerarySchema = new mongoose.Schema({
     },
     img : {
         type : String,
-        default : `http://simg.donga.com/ugc/MLBPARK/Board/15/48/98/57/1548985783315.jpg` // 아이유 이미지
+        default : `${process.env.DOMAIN_URL}/static/image.png` // 아이유 이미지
     },
     title : {
         type : String,
@@ -27,7 +29,11 @@ const itinerarySchema = new mongoose.Schema({
     date : {
         type : String,
         required : "Date is Required"
-    }
+    },
+    areaCodes : [{
+        type : mongoose.Schema.Types.Mixed,
+        required : "areaCodes Required"
+    }]
 })
 
 const model = mongoose.model('Itinerary', itinerarySchema);

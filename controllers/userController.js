@@ -29,7 +29,7 @@ export const postJoin = async (req, res, next) => {
         next(); // login 바로 연결
     }catch(err) {
         console.log(`Join Error : ${err}`);
-        res.status(401).send('User is Already Exist!');
+        res.status(401).send({status : 401, message : err});
     }
 }
 
@@ -95,11 +95,15 @@ export const postTendency = async (req, res, next) => {
                 // console.dir(res);
             }).catch(err => {
                 console.log('희망서버로 못 줌');
+                res.status(202).json({
+                    message: 'Success Update Tedency. But Cant send tendency to Hope server.',
+                    selections
+                })
                 console.log(err);
             })  
         } catch(err) {
             console.log('희망서버로 못 줌');
-            console.log(err);
+            // console.log(err);
         }
 
         res.status(200).json({

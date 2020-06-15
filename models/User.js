@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
-// import validator from 'validator';
+import validator from 'validator';
 
 const userSchema = new mongoose.Schema({
     // 계정 관련
@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     email : {
         type : String,
         required: 'Email is required',
-        // validate: [validator.isEmail]
+        validate: [validator.isEmail]
     },
     kakaoId : Number,
     createdAt : {

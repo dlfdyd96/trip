@@ -6,15 +6,17 @@ dotenv.config();
 // C
 export const postRegisterItinerary = async (req, res, next) => {
     const { 
-        body: { title, description, routes, date }
+        body: { title, description, routes, date, areaCodes }
     } = req;
     try {
+        console.log(areaCodes);
         const newItin = await Itinerary.create({
             creator: req.user._id,
             title,
             date,
             description,
             routes,
+            areaCodes,
         });
         // req.user.itinerary.push(newItin.id);
         // req.user.save();
@@ -53,6 +55,8 @@ export const getDetailItinerary = async (req, res, next) => {
 
         let routes = await Promise.all(allWorks);
 
+        // console.log(`읽기 : ${itinerary}`);
+
         res.status(200).json({
             message : "Success Get Itinerary",
             itinerary,
@@ -77,9 +81,10 @@ export const postEditItinerary = async (req, res, next) => {
         params : {id},
     } = req;
     try {
-        console.log({title, description, routes, id});
+        console.log({title, description, routes, date, id});
+        
         await Itinerary.findOneAndUpdate({_id : id}, {title, description, routes, date});
-        res.status(200).json({
+        res.status(200).json ({
             message : "Success Update Itinerary",
         })
     } catch(err){ 
@@ -116,7 +121,7 @@ export const getDeleteItinerary = async (req, res, next) => {
 }
 
 
-
+// 공유된 페이지 모두 얻기
 export const getItineraries = async (req, res) => {
     try {
         const items = await Itinerary.find({publish:true}).populate("creator").sort({createdAt: -1});
@@ -133,6 +138,8 @@ export const getItineraries = async (req, res) => {
     }
 } 
 
+
+// public 설정
 export const setPublic = async (req, res) => {
     const {
         params : { id },
@@ -153,6 +160,7 @@ export const setPublic = async (req, res) => {
     }
 }
 
+// private 설정
 export const setPrivate = async (req, res) => {
     const {
         params : { id },

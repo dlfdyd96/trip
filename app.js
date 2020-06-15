@@ -14,6 +14,7 @@ import morgan from 'morgan'
 
 const app = express()
 
+app.use('/static', express.static(__dirname + '/public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
