@@ -18,7 +18,8 @@ export const postJoin = async (req, res, next) => {
         }
     } = req;
     if (password !== verifyPassword) {
-        res.status(401).send('Not match passwords!');
+        const msg = "입력한 두 비밀번호가 일치하지 않습니다."
+        res.status(401).send({status : 401, message : msg});
     }
     // User 이미 존재하면 미리다 체크해줌.
     const user = new User({email, name});
@@ -28,8 +29,16 @@ export const postJoin = async (req, res, next) => {
         req.user = user;
         next(); // login 바로 연결
     }catch(err) {
-        console.log(`Join Error : ${err}`);
-        res.status(401).send({status : 401, message : err});
+        console.log(err)
+
+        let msg = "회원 가입을 할 수 없습니다.";
+
+        if(err.name.indexOf("UserExistsError") > -1)
+            msg = "가입한 사용자가 존재 합니다."
+        else if(err.name.indexOf("ValidationError") > -1)
+            msg = "이메일 형식을 입력하세요."
+
+        res.status(401).send({ status : 401, message : msg });
     }
 }
 
